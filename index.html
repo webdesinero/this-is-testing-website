@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Happy Birthday Democross!</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Arial', sans-serif;
+      background: url('bg-image.jpg') no-repeat center center fixed; 
+      background-size: cover; 
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .slides-container {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+
+    .slide {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      opacity: 0;
+      transition: opacity 0s; 
+    }
+
+    .slide.active {
+      opacity: 1;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 40px;
+      text-align: center;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      max-width: 400px;
+      z-index: 1; 
+    }
+
+    h1 {
+      font-size: 3rem;
+      color: #ffffff;
+      margin: 0;
+    }
+
+    h2 {
+      font-size: 2rem;
+      color: #ffffff;
+      margin: 20px 0;
+    }
+
+    p {
+      font-size: 1.2rem;
+      color: #ffffff;
+      margin: 10px 0;
+    }
+
+    .download-button {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 10px 20px;
+      background: rgba(91, 149, 92, 0.8);
+      color: white;
+      border-radius: 10px;
+      text-decoration: none;
+      font-size: 1.2rem;
+      transition: background 0.3s ease;
+    }
+
+    .download-button:hover {
+      background: rgba(107, 91, 149, 1);
+    }
+
+    .balloon {
+      position: absolute;
+      width: 60px;
+      height: 80px;
+      background: #ff6f61;
+      border-radius: 50%;
+      cursor: pointer;
+      bottom: -100px; 
+      animation: float 8s linear infinite;
+      transition: transform 0.2s ease, opacity 0.2s ease;
+    }
+
+    .balloon::before {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 2px;
+      height: 50px;
+      background: #333;
+    }
+
+    @keyframes float {
+      0% {
+        transform: translateY(0);
+      }
+      100% {
+        transform: translateY(-110vh); 
+      }
+    }
+
+    .confetti {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background: #ff6f61;
+      border-radius: 50%;
+      animation: confetti 1s ease-out;
+    }
+
+    @keyframes confetti {
+      0% {
+        transform: translate(0, 0) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translate(var(--x), var(--y)) rotate(360deg);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="slides-container">
+    <!-- Slide 1: Happy Birthday -->
+    <div class="slide active">
+      <div class="card">
+        <h1>🎉 Happy Birthday! 🎉</h1>
+      </div>
+    </div>
+
+    <!-- Slide 2: To Democross -->
+    <div class="slide">
+      <div class="card">
+        <h2>To: Democross 💖</h2>
+      </div>
+    </div>
+
+    <!-- Slide 3: Wishes -->
+    <div class="slide">
+      <div class="card">
+        <p>kuj toh likhnege yeh sochna padega </p>
+       
+      </div>
+    </div>
+
+    <!-- Slide 4: Gift -->
+    <div class="slide">
+      <div class="card">
+        <img src="gift.jpg" alt="Your Gift" style="width: 100%; border-radius: 10px; margin-top: 20px;">
+        <a href="gift.jpg" download class="download-button">Download Your Gift</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Balloons -->
+  <div class="balloon" style="left: 10%; animation-delay: 0s; background: #ff6f61;"></div>
+  <div class="balloon" style="left: 30%; animation-delay: 2s; background: #6b5b95;"></div>
+  <div class="balloon" style="left: 70%; animation-delay: 4s; background: #ffcc5c;"></div>
+  <div class="balloon" style="left: 50%; animation-delay: 6s; background: #88d8b0;"></div>
+
+  <!-- Audio for Pop Sound -->
+  <audio id="pop-sound" src="pop-sound.mp3"></audio>
+
+  <script>
+    const slides = document.querySelectorAll('.slide');
+    let currentSlide = 0;
+    let slideInterval;
+
+    function showSlide(index) {
+      slides.forEach((slide, i) => {
+        slide.classList.toggle('active', i === index);
+      });
+    }
+
+    function startSlideShow() {
+      slideInterval = setInterval(() => {
+        currentSlide = (currentSlide + 1) % slides.length;
+        // Stop at the download slide (Slide 4)
+        if (currentSlide === 3) {
+          clearInterval(slideInterval);
+        }
+        showSlide(currentSlide);
+      }, 3000); // Change slide every 3 seconds
+    }
+
+    // Start the slideshow
+    startSlideShow();
+
+    // Balloon functionality
+    const balloons = document.querySelectorAll('.balloon');
+    const popSound = document.getElementById('pop-sound');
+
+    balloons.forEach(balloon => {
+      balloon.addEventListener('click', () => {
+        // Play pop sound
+        popSound.currentTime = 0; // Reset sound to start
+        popSound.play();
+
+        // Pop effect: shrink and fade out
+        balloon.style.transform = 'scale(0)';
+        balloon.style.opacity = '0';
+
+        // Get balloon position
+        const rect = balloon.getBoundingClientRect();
+        const x = rect.left + rect.width / 2;
+        const y = rect.top + rect.height / 2;
+
+        // Create confetti at balloon position
+        createConfetti(x, y);
+
+        // Remove balloon after animation
+        setTimeout(() => {
+          balloon.remove();
+        }, 200);
+      });
+    });
+
+    function createConfetti(x, y) {
+      for (let i = 0; i < 50; i++) {
+        const confetti = document.createElement('div');
+        confetti.classList.add('confetti');
+        confetti.style.left = `${x}px`;
+        confetti.style.top = `${y}px`;
+        confetti.style.background = `hsl(${Math.random() * 360}, 70%, 50%)`;
+        confetti.style.setProperty('--x', `${Math.random() * 200 - 100}px`);
+        confetti.style.setProperty('--y', `${Math.random() * 200 - 100}px`);
+        confetti.style.animationDuration = `${Math.random() * 1 + 0.5}s`;
+        document.body.appendChild(confetti);
+        setTimeout(() => confetti.remove(), 1000);
+      }
+    }
+  </script>
+</body>
+</html>
